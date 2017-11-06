@@ -1,13 +1,23 @@
 // @flow
-import React, { Component } from 'react'
 import type { Children } from 'react'
-import { setBlockNote, setBlockStart, setBlockDuration } from '../actions/editor'
+import type { GridProperties } from '../components/EditorGrid'
 
-export default class App extends Component {
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import Preferences from './Preferences'
+import * as action from '../actions/editor'
+
+
+class App extends Component {
 
   props: {
+    grid: GridProperties,
+    view: Children,
     children: Children,
-    dispatch: Function,
+    preferences: Children,
+    setBlockNote: Function,
+    setBlockStart: Function,
+    setBlockDuration: Function,
   }
 
   componentWillMount () {
@@ -19,35 +29,79 @@ export default class App extends Component {
     document.removeEventListener('keydown', this.resolveKey)
   }
 
-  _resolveKey (event) {
-    console.log(event.key, event.shiftKey)
-    let g = this.props.grid.size
+  _resolveKey (event) { // eslint-disable-line complexity
+
+    let g = this.props.grid
+    let step = ( this.props.samples ) / (  g.sub )
+
     if (event.key === 'ArrowRight')
+
       if (event.shiftKey)
-        return this.props.dispatch(setBlockDuration(g))
+        return this.props.setBlockDuration(step)
       else
-        return this.props.dispatch(setBlockStart(g))
+        return this.props.setBlockStart(step)
+
     if (event.key === 'ArrowLeft')
       if (event.shiftKey)
-        return this.props.dispatch(setBlockDuration(-g))
+        return this.props.setBlockDuration(-step)
       else
-        return this.props.dispatch(setBlockStart(-g))
+        return this.props.setBlockStart(-step)
+
     if (event.key === 'ArrowUp')
       if (event.shiftKey)
-        return this.props.dispatch(setBlockNote(12))
+        return this.props.setBlockNote(12)
       else
-        return this.props.dispatch(setBlockNote(1))
+        return this.props.setBlockNote(1)
+
     if (event.key === 'ArrowDown')
       if (event.shiftKey)
-        return this.props.dispatch(setBlockNote(-12))
+        return this.props.setBlockNote(-12)
       else
-        return this.props.dispatch(setBlockNote(-1))
+        return this.props.setBlockNote(-1)
 
   }
 
   render() {
     return <div>
-      {this.props.children}
+      {this.props.view}
+
+      <section className='overlays'>
+        {this.props.preferences ? <Preferences /> : null}
+      </section>
+
     </div>
   }
 }
+
+function mapState (state, props) {
+  let children    = props.children
+  let samples     = state.editor.document.samples
+  let grid        = state.editor.grid
+  let view        = props.children
+  let preferences = !! state.tool.preferences.isOpen ? <Preferences /> : null
+
+  return {
+    grid,
+    view,
+    children,
+    preferences,
+    samples,
+  }
+}
+
+function mapDispatch (dispatch, props) {
+
+  let setBlockNote = f => dispatch(action.setBlockNote(f))
+  let setBlockStart = f => dispatch(action.setBlockStart(f))
+  let setBlockDuration = l => dispatch(action.setBlockDuration(l))
+  let setBlockVelocity = A => dispatch(action.setBlockVelocity(A))
+  return {
+    setBlockNote,
+    setBlockStart,
+    setBlockDuration,
+    setBlockVelocity,
+  }
+}
+
+
+export default connect(mapState, mapDispatch)(App)
