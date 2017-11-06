@@ -1,8 +1,8 @@
 {
-  "name": "tween-midi",
-  "productName": "Tween MIDI",
+  "name": "icon-manager",
+  "productName": "Icon Manager",
   "version": "0.0.1",
-  "description": "midimidimidimidimidi",
+  "description": "SVG Assets manager, originally built for Trinity Icons",
   "scripts": {
     "al": "pm2 start npm -f --interpreter bash --name 'Renderer' -- run start-main-dev && pm2 start npm -f --interpreter bash --name 'Renderer' -- run start-renderer-dev",
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
@@ -32,8 +32,8 @@
   },
   "browserslist": "electron 1.6",
   "build": {
-    "productName": "Tween MIDI",
-    "appId": "me.tuomashatakka.midi",
+    "productName": "Icon Manager",
+    "appId": "me.tuomashatakka.icons",
     "files": [
       "dist/",
       "node_modules/",
@@ -74,7 +74,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chentsulin/electron-react-boilerplate.git"
+    "url": "git@git.github.com/tuomashatakka/desktop-icon-manager.git"
   },
   "author": {
     "name": "Tuomas Hatakka",
@@ -185,7 +185,6 @@
     "event-kit": "^2.4.0",
     "font-awesome": "^4.7.0",
     "history": "^4.6.3",
-    "midi-file": "^1.0.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-hot-loader": "3.0.0-beta.6",
