@@ -4,20 +4,25 @@ import type { GridProperties } from '../components/EditorGrid'
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Preferences from './Preferences'
 import * as action from '../actions/editor'
 
 
 class App extends Component {
 
   props: {
-    grid: GridProperties,
     view: Children,
     children: Children,
     preferences: Children,
     setBlockNote: Function,
     setBlockStart: Function,
     setBlockDuration: Function,
+  }
+
+  constructor () {
+    super (...arguments)
+    this.state = {
+      path: '/Users/tuomas/Projects/Modules/trinity-icons'
+    }
   }
 
   componentWillMount () {
@@ -29,44 +34,19 @@ class App extends Component {
     document.removeEventListener('keydown', this.resolveKey)
   }
 
-  _resolveKey (event) { // eslint-disable-line complexity
-
-    let g = this.props.grid
-    let step = ( this.props.samples ) / (  g.sub )
-
-    if (event.key === 'ArrowRight')
-
-      if (event.shiftKey)
-        return this.props.setBlockDuration(step)
-      else
-        return this.props.setBlockStart(step)
-
-    if (event.key === 'ArrowLeft')
-      if (event.shiftKey)
-        return this.props.setBlockDuration(-step)
-      else
-        return this.props.setBlockStart(-step)
-
-    if (event.key === 'ArrowUp')
-      if (event.shiftKey)
-        return this.props.setBlockNote(12)
-      else
-        return this.props.setBlockNote(1)
-
-    if (event.key === 'ArrowDown')
-      if (event.shiftKey)
-        return this.props.setBlockNote(-12)
-      else
-        return this.props.setBlockNote(-1)
-
+  _resolveKey (event) {
   }
 
   render() {
     return <div>
-      {this.props.view}
+      {this.props.view || null}
+      <input
+        value={this.state.path}
+        type='text'
+        onChange={(event) => this.setState({ path: event.target.value })}
+      />
 
       <section className='overlays'>
-        {this.props.preferences ? <Preferences /> : null}
       </section>
 
     </div>
@@ -78,18 +58,16 @@ function mapState (state, props) {
   let samples     = state.editor.document.samples
   let grid        = state.editor.grid
   let view        = props.children
-  let preferences = !! state.tool.preferences.isOpen ? <Preferences /> : null
 
   return {
     grid,
     view,
     children,
-    preferences,
     samples,
   }
 }
 
-function mapDispatch (dispatch, props) {
+function mapDispatch (dispatch) {
 
   let setBlockNote = f => dispatch(action.setBlockNote(f))
   let setBlockStart = f => dispatch(action.setBlockStart(f))
