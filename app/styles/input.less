@@ -10,23 +10,44 @@
   }
 }
 
+input,
 .field {
+  -webkit-appearance: none;
   align-items:  center;
   display:      flex;
   height:       1.6em;
+  width:        auto;
+  border:       none;
+  background:   transparent;
+  font-family:  inherit;
+  font-weight:  inherit;
+  color:        inherit;
+  max-width:    100%;
   padding:      @padding-regular / 2;
   transition:   @transition-colors;
   border-radius: 5px;
-  cursor: pointer;
-
-  h4 {
-    .text(label);
-    margin: 0;
-    padding: 0 0 0 @padding-regular;
+  cursor:       pointer;
+  transition:   @transition-colors;
+  //
+  // h4 {
+  //   .text(label);
+  //   margin: 0;
+  //   padding: 0 0 0 @padding-regular;
+  // }
+  //
+  &:focus {
+    background-color: @input-background-selected;
+    border-color:     darken(@input-background-selected, 8%);
+    outline:          none;
   }
-
   &:hover {
-    color: @text-color-hover;
-    background: @button-background-hover
+    transition-duration: @transition-duration / 4;
+    background-color:    @input-background-hover;
+    border-color:        darken(@input-background-hover, 8%);
+    color:               white;
+  }
+  &:focus:hover {
+    background-color: @input-background-active;
+    border-color:     darken(@input-background-active, 8%);
   }
 }

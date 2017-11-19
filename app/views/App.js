@@ -1,21 +1,22 @@
 // @flow
 import type { Children } from 'react'
-import type { GridProperties } from '../components/EditorGrid'
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import * as action from '../actions/editor'
+
+import * as action from '../actions/items'
+import List from '../components/List'
+import Icon from '../models/Icon'
 
 
 class App extends Component {
 
   props: {
-    view: Children,
-    children: Children,
-    preferences: Children,
-    setBlockNote: Function,
-    setBlockStart: Function,
-    setBlockDuration: Function,
+    size: number,
+    icons: Array<*>,
+    addIcon: Function,
+    addIcons: Function,
+    removeIcon: Function,
   }
 
   constructor () {
@@ -23,6 +24,8 @@ class App extends Component {
     this.state = {
       path: '/Users/tuomas/Projects/Modules/trinity-icons'
     }
+
+    this.onDrop = this.onDrop.bind(this)
   }
 
   componentWillMount () {
@@ -37,47 +40,82 @@ class App extends Component {
   _resolveKey (event) {
   }
 
+  onDrop (event) {
+    let files = [ ...event.dataTransfer.files ]
+    console.log(files)
+    let icons = files.map(file => ({
+      path: file.path,
+      type: file.type,
+      name: file.name,
+      size: file.size,
+    }))
+    if (icons.length)
+      this.props.addIcons(...icons)
+  }
+
+  export (format) {
+    alert("Exportin'" + format)
+  }
+
   render() {
-    return <div>
-      {this.props.view || null}
+
+    let logge = name => e => {
+      e.persist()
+      console.log(name, e)
+      e.preventDefault()
+    }
+    let prevent = fn => event => {
+      event.preventDefault()
+      fn(event)
+      return false
+    }
+
+    return <div
+      className='root'
+      onDrop={prevent(this.onDrop)}
+      onDragEnd={logge('end')}
+      onDragOver={logge('over')}
+      >
       <input
-        value={this.state.path}
         type='text'
+        value={this.state.path}
         onChange={(event) => this.setState({ path: event.target.value })}
       />
 
-      <section className='overlays'>
-      </section>
+      <header>
+        <h2>Icon set</h2>
+        <sub>{this.props.size} icons</sub>
+      </header>
+
+      <main>
+        <List items={this.props.icons} />
+      </main>
+
+      <footer className='toolbar'>
+        <h3 className='label'>Export</h3>
+        <a className='btn' onClick={this.export.bind(this, 'svg')}>SVG</a>
+        <a className='btn' onClick={this.export.bind(this, 'font')}>Webfont</a>
+      </footer>
 
     </div>
   }
 }
 
-function mapState (state, props) {
-  let children    = props.children
-  let samples     = state.editor.document.samples
-  let grid        = state.editor.grid
-  let view        = props.children
-
-  return {
-    grid,
-    view,
-    children,
-    samples,
-  }
+function mapState (state) {
+  let icons = state.items.map(item => new Icon(item))
+  let size  = state.items.length
+  return { icons, size }
 }
 
 function mapDispatch (dispatch) {
 
-  let setBlockNote = f => dispatch(action.setBlockNote(f))
-  let setBlockStart = f => dispatch(action.setBlockStart(f))
-  let setBlockDuration = l => dispatch(action.setBlockDuration(l))
-  let setBlockVelocity = A => dispatch(action.setBlockVelocity(A))
+  let addIcon = icon => dispatch(action.addIcon(icon))
+  let addIcons = (...icons) => dispatch(action.addIcons(...icons))
+  let removeIcon = icon => dispatch(action.removeIcon(icon))
   return {
-    setBlockNote,
-    setBlockStart,
-    setBlockDuration,
-    setBlockVelocity,
+    addIcon,
+    addIcons,
+    removeIcon,
   }
 }
 

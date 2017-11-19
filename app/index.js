@@ -9,15 +9,13 @@ import './styles/index.less'
 const state = require('./store/initialState')
 const store = configureStore(state)
 const host  = document.getElementById('root')
-
-const mount = (element, ComponentClass) => {
+const mount = (element, ComponentClass) =>
   render(
     <AppContainer>
       <ComponentClass store={store} history={history} />
     </AppContainer>,
     element
   )
-}
 
 mount(host, Root)
 

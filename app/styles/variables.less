@@ -3,8 +3,6 @@
 @color-primary:      #44394d;
 @color-primary-dark: #312838;
 
-@import "config";
-
 @padding-regular:     1em;
 
 @transition-duration: 0.3s;
@@ -26,6 +24,12 @@
 @button-background-hover:       darken(@color-dark, 5%);
 @button-background-selected:    @color-primary;
 @button-background-active:      mix(@button-background-selected, @button-background-hover);
+@input-background-hover:        darken(@color-dark, 5%);
+@input-background-selected:     @color-primary;
+@input-background-active:       mix(@button-background-selected, @button-background-hover);
+
+@grid-tile-background-color:    @color-dark;
+@grid-tile-border-color:        darken(@color-dark, 3%);
 
 @note-text-color:               lighten(@color-primary, 50%);
 @note-text-color-active:        lighten(@color-primary, 65%);
@@ -57,5 +61,9 @@
 }
 
 .color(primary) {
-  background-color: var(--color-primary, @color-primary)
+  color: var(--color-primary-text, lighten(@color-primary, 25%));
+  border-color: var(--color-primary-border, darken(@color-primary, 8%));
+  background-color: var(--color-primary, @color-primary);
 }
+
+@grid-spacing: 2em;

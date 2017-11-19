@@ -1,8 +1,6 @@
 // @flow
 import { combineReducers } from 'redux'
-import counter from './counter'
-import editor from './editor'
-import tool from './tool'
+import items from './items'
 
 export type Action = {
   +type: string,
@@ -11,9 +9,7 @@ export type Action = {
 }
 
 const reducer = combineReducers({
-  counter,
-  editor,
-  tool,
+  items,
 })
 
 export default reducer
