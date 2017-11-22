@@ -83,11 +83,13 @@ class App extends Component {
       />
 
       <header>
-        <h2>Icon set</h2>
+        <h2>
+          <input defaultValue='Icon set' />
+        </h2>
         <sub>{this.props.size} icons</sub>
       </header>
 
-      <main>
+      <main className='browse'>
         <List items={this.props.icons} />
       </main>
 
