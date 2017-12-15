@@ -1,6 +1,7 @@
 // @flow
 import { combineReducers } from 'redux'
 import items from './items'
+import preferences from './iconset'
 
 export type Action = {
   +type: string,
@@ -10,6 +11,7 @@ export type Action = {
 
 const reducer = combineReducers({
   items,
+  preferences,
 })
 
 export default reducer

@@ -3,7 +3,14 @@ import IconView from '../components/Icon'
 
 export default class Icon {
   constructor (properties) {
-    Object.assign(this, properties)
+    this.properties = new Map(Object.entries(properties))
+  }
+
+  toJSON () {
+    let data = {}
+    for (let [attr, value] of this.properties.entries())
+      data[attr] = value
+    return data
   }
 }
 

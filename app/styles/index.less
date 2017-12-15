@@ -9,10 +9,11 @@ body {
   color: @text-color;
   height: 100vh;
   background-color: @base-background;
-  font-family: Omnes, Montserrat, Questrial, Gotham, Arial, Helvetica, Helvetica Neue, serif;
+  font-family: Sofia Pro, Omnes, Montserrat, Questrial, Gotham, Arial, Helvetica, Helvetica Neue, serif;
   overflow-y: hidden;
   user-select: none;
   line-height: 1.8em;
+  cursor: default;
 }
 
 #root {
@@ -28,16 +29,23 @@ body {
     padding: @grid-spacing;
     h2 {
       text-transform: uppercase;
-      letter-spacing: 0.3em;
+      letter-spacing: 0.1em;
       input {
-        font-size: inherit;
+        -webkit-appearance: none;
+        text-align:     center;
+        font-size:      inherit;
+        font:           inherit;
         letter-spacing: inherit;
         text-transform: inherit;
-        font: inherit;
-        max-width: none;
-        display: block;
-        width: auto;
-        margin: 0;
+        box-sizing:     border-box;
+        line-height:    1.5em;
+        display:        block;
+        padding:        0;
+        margin:         0;
+        width:          100%;
+        height:         auto;
+        padding:        0.3em 0.8em 0.1em;
+        border-radius:  4px;
       }
     }
   }
@@ -52,10 +60,12 @@ body {
   h3 {
     display: block;
     font-weight: 100;
+    white-space: nowrap;
+    overflow: hidden;
   }
   span.meta {
     display: block;
-    font-weight: 100;
+    font-weight: 800;
   }
   img {
     box-sizing: border-box;
@@ -128,6 +138,12 @@ a {
   flex-flow: row nowrap;
   align-items: center;
   justify-content: flex-start;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px solid lighten(@base-background, 12%);
+  background-color: lighten(@base-background, 3%);
 
   button,
   .label {
@@ -145,7 +161,7 @@ a {
     background-color: @grid-tile-background-color;
     border-color:     @grid-tile-border-color;
     flex:             0 0 auto;
-    width:            8em;
+    width:            @grid-tile-size;
     box-sizing:       border-box;
     border-width:     0 1px 1px 0;
     border-style:     solid;

@@ -2,6 +2,7 @@
 export const ADD_ICON    = 'ADD_ICON'
 export const ADD_ICONS   = 'ADD_ICONS'
 export const REMOVE_ICON = 'REMOVE_ICON'
+export const UPDATE_ICON = 'UPDATE_ICON'
 
 export function addIcon (icon) {
   return {

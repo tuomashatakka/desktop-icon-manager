@@ -1,14 +1,59 @@
 // @flow
-import type { Children } from 'react'
+// import type { Children } from 'react'
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Emitter } from 'event-kit'
 
 import * as action from '../actions/items'
+import * as iconsetAction from '../actions/iconset'
 import List from '../components/List'
 import Icon from '../models/Icon'
+import FileEntry from '../models/FileEntry'
 
+const signal = Symbol('event-emitter')
 
+class ThrottledInput extends Component {
+  constructor (props) {
+    super(props)
+    this[signal] = new Emitter()
+    this.state = { value: props.value || '' }
+    if (props.onDidStopChanging)
+      this.onStopChanging(props.onDidStopChanging)
+  }
+  onStopChanging (callback) {
+    this[signal].on('did-stop-changing', callback)
+  }
+
+  render () {
+
+    const changed = () => {
+      this[signal].emit('did-stop-changing', this.state)
+    }
+    const dispatch = throttle(changed, 500)
+    const onChange = event => {
+      this.setState({ value: event.target.value })
+      dispatch()
+    }
+    return <input
+      value={this.state.value}
+      onChange={onChange} />
+  }
+}
+
+function throttle (callback, timeout) {
+  let bound = 60
+  return () => {
+    this.started = Date.now()
+    setTimeout(() => {
+      let now = Date.now()
+      console.log("Testing", now - this.started > timeout - bound)
+      if (now - this.started > timeout - bound)
+        callback()
+    }, timeout)
+  }
+}
+throttle = throttle.bind(throttle)
 class App extends Component {
 
   props: {
@@ -17,6 +62,7 @@ class App extends Component {
     addIcon: Function,
     addIcons: Function,
     removeIcon: Function,
+    updateName: Function,
   }
 
   constructor () {
@@ -37,20 +83,18 @@ class App extends Component {
     document.removeEventListener('keydown', this.resolveKey)
   }
 
-  _resolveKey (event) {
+  _resolveKey () {
   }
 
-  onDrop (event) {
+  async onDrop (event) {
     let files = [ ...event.dataTransfer.files ]
-    console.log(files)
-    let icons = files.map(file => ({
-      path: file.path,
-      type: file.type,
-      name: file.name,
-      size: file.size,
-    }))
-    if (icons.length)
-      this.props.addIcons(...icons)
+    files.forEach(async f => {
+      let entry = new FileEntry(f)
+      let icons = await entry.read('.svg')
+      if (icons.length)
+        this.props.addIcons(...icons)
+    })
+
   }
 
   export (format) {
@@ -84,7 +128,12 @@ class App extends Component {
 
       <header>
         <h2>
-          <input defaultValue='Icon set' />
+          <ThrottledInput
+            value='Icon set'
+            onDidStopChanging={(state) => {
+              this.props.updateName({ name: state.value })
+            }}
+          />
         </h2>
         <sub>{this.props.size} icons</sub>
       </header>
@@ -114,10 +163,13 @@ function mapDispatch (dispatch) {
   let addIcon = icon => dispatch(action.addIcon(icon))
   let addIcons = (...icons) => dispatch(action.addIcons(...icons))
   let removeIcon = icon => dispatch(action.removeIcon(icon))
+  let updateName = name => dispatch(iconsetAction.updateName(name))
+
   return {
     addIcon,
     addIcons,
     removeIcon,
+    updateName,
   }
 }
 
