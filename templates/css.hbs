@@ -1,0 +1,26 @@
+/**
+ * {{ fontName }} icon font
+ *
+ * @author {{ author }}
+ * @date   {{ date }}
+ */
+
+
+@font-face {
+	font-family: "{{ fontName }}";
+  src: {{{ src }}};
+}
+
+[class*="{{classPrefix}}"]::before {
+  display:        inline-block;
+	line-height     inherit;
+	font-style:     initial;
+  font-weight:    initial;
+  font-family:    "{{fontName}}";
+  vertical-align: middle;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+{{#each codepoints}}
+.{{ ../classPrefix }}{{ @key }}::before { content: "\\{{ this }}" }
+{{/each}}

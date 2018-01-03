@@ -5,8 +5,10 @@ import type { Action } from '.'
 
 export default function iconsetReducer (state: {} | void, action: Action) {
   switch (action.type) {
+
     case UPDATE_NAME:
       return { name: action.name }
+
     default:
       return state || {}
   }

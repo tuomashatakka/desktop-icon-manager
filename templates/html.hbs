@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{{fontName}}</title>
+
+    <style>
+
+    body {
+      font-size:    16px;
+      font-weight:  300;
+      font-family:  'Gotham', 'Montserrat', 'Questrial', 'Raleway', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      padding:      3em;
+      margin:       0 }
+
+    .item {
+      display:       flex;
+      align-items:   center;
+      margin:        0 2px 2px 0;
+      border-radius: 4px;
+      background:    #fafaff;
+      color:         #424261;
+      padding:       0.2em 0.5em;
+      line-height:   2em }
+
+    .item .name,
+    .item .code {
+      margin-left: 0.7em }
+
+    .item > span:first-of-type {
+      text-align:   center;
+      display:      inline-block;
+      width:        1em;
+      height:       1em;
+      line-height:  1em;
+    }
+
+    .controls {
+      display: block;
+      margin:  0 0 2em;
+    }
+
+    main {
+      display: flex;
+      flex-flow: row wrap;
+    }
+
+    {{{ styles }}}
+
+    </style>
+  </head>
+  <body>
+
+    <h1>{{fontName}}</h1>
+
+    <aside class='controls'>
+      <h3>Size</h3>
+      <button name='+'>Increase</button>
+      <button name='-'>Decrease</button>
+    </aside>
+
+    <main>
+      {{#each codes }}
+
+      <article class='item'>
+        <span class='{{ ../classPrefix }}{{ @key }}'></span>
+        <span class='code'>\\{{ this }}</span>
+        <span class='name'>{{ @key }}</span>
+      </article>
+
+      {{/each }}
+    </main>
+
+
+  <script>
+  const items = Array.from(document.querySelectorAll('.item'))
+  const icons = items.map(item => item.firstElementChild)
+  const MINIMUM_SIZE = 0.25
+  const MAXIMUM_SIZE = 16
+  let iconSize = 1
+
+  function increaseFontSize () {
+    if (iconSize >= MAXIMUM_SIZE)
+      return
+    iconSize *= 2
+    icons.forEach(item => item.style.setProperty('font-size', `${iconSize}em`))
+  }
+
+  function decreaseFontSize () {
+    if (iconSize <= MINIMUM_SIZE)
+      return
+    iconSize /= 2
+    icons.forEach(item => item.style.setProperty('font-size', `${iconSize}em`))
+  }
+
+  document.querySelector('[name="+"]').addEventListener('click', increaseFontSize)
+  document.querySelector('[name="-"]').addEventListener('click', decreaseFontSize)
+  </script>
+  </body>
+</html>

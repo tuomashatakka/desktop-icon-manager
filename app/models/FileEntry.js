@@ -22,7 +22,6 @@ export default class FileEntry {
 
   async isDirectory () {
     let stats = await this.stat
-    console.log(this, stats)
     return stats.isDirectory()
   }
 

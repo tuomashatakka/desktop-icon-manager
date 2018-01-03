@@ -7,12 +7,15 @@ export type Properties = {
 }
 
 const ListItem = ({ item }) =>
-  <li className='list-item'>{views.get(item)}</li>
+  <li className='list-item'>
+    { views.get(item) }
+  </li>
 
 const List = (props: Properties) =>
   <ol className='list grid'>
     {props.items.map((item, key) =>
-      <ListItem key={key} item={item} />)}
+      <ListItem key={key} item={item} />
+    )}
   </ol>
 
 export default List

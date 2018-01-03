@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "description": "SVG Assets manager, originally built for Trinity Icons",
   "scripts": {
+    "cc": "concurrently \"npm run start-main-dev\" \"npm run start-renderer-dev\"",
     "al": "pm2 start npm -f --interpreter bash --name 'Renderer' -- run start-main-dev && pm2 start npm -f --interpreter bash --name 'Renderer' -- run start-renderer-dev",
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.dev.dll.js --colors",
@@ -191,7 +192,8 @@
     "react-redux": "^5.0.5",
     "redux": "^3.7.1",
     "redux-thunk": "^2.2.0",
-    "source-map-support": "^0.4.15"
+    "source-map-support": "^0.4.15",
+    "webfonts-generator": "^0.4.0"
   },
   "devEngines": {
     "node": ">=7.x",

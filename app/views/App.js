@@ -10,10 +10,12 @@ import * as iconsetAction from '../actions/iconset'
 import List from '../components/List'
 import Icon from '../models/Icon'
 import FileEntry from '../models/FileEntry'
+import exportWebfont from '../utils/export'
 
 const signal = Symbol('event-emitter')
 
 class ThrottledInput extends Component {
+
   constructor (props) {
     super(props)
     this[signal] = new Emitter()
@@ -97,8 +99,11 @@ class App extends Component {
 
   }
 
-  export (format) {
-    alert("Exportin'" + format)
+  async export (format) {
+    // alert("Exportin'" + format)
+    let result = await exportWebfont(this.props.icons)
+    window.result = result
+    alert("DONE :)")
   }
 
   render() {
@@ -114,12 +119,14 @@ class App extends Component {
       return false
     }
 
+    console.log(this.props.icons)
+
     return <div
       className='root'
       onDrop={prevent(this.onDrop)}
       onDragEnd={logge('end')}
-      onDragOver={logge('over')}
-      >
+      onDragOver={logge('over')}>
+
       <input
         type='text'
         value={this.state.path}
@@ -144,7 +151,8 @@ class App extends Component {
 
       <footer className='toolbar'>
         <h3 className='label'>Export</h3>
-        <a className='btn' onClick={this.export.bind(this, 'svg')}>SVG</a>
+        {/* TODO */}
+        {/* <a className='btn' onClick={this.export.bind(this, 'svg')}>SVG</a> */}
         <a className='btn' onClick={this.export.bind(this, 'font')}>Webfont</a>
       </footer>
 
