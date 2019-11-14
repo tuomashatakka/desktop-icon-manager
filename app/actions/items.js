@@ -24,3 +24,10 @@ export function removeIcon (icon) {
     icon,
   }
 }
+
+export function updateIcon (icon) {
+  return {
+    type: UPDATE_ICON,
+    icon,
+  }
+}

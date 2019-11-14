@@ -79,3 +79,11 @@ export default function generateIconFont (icons: Array<IconData> = [], dest = 'o
     )
   })
 }
+
+export function saveToLocalStorage (key, value = null) {
+  localStorage.setItem(key, JSON.stringify(value))
+}
+
+export function loadFromLocalStorage (key) {
+  return JSON.parse(localStorage.getItem(key) || '{}')
+}

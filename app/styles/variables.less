@@ -1,7 +1,9 @@
-@color-text:         #f8f8fa;
-@color-dark:         #2f2d3d;
-@color-primary:      #44394d;
-@color-primary-dark: #312838;
+@color-white:         #fafafe;
+@color-light:         #f7f5f2;
+@color-selected:      #34f7cc;
+@color-dark:          #282138;
+@color-primary:       #3470f0;
+@color-primary-dark:  multiply(@color-primary, @color-dark);
 
 @padding-regular:     1em;
 
@@ -16,20 +18,26 @@
   @transition-duration / 4 background-color,
   @transition-duration / 4 border-color;
 
-@base-background:               @color-dark;
+@base-background:               @color-white;
 
-@text-color:                    @color-text;
+@text-color:                    @color-dark;
 @text-color-hover:              mix(@text-color, @color-dark);
 
-@button-background-hover:       darken(@color-dark, 5%);
-@button-background-selected:    @color-primary;
+@link-color:                    @color-primary;
+@link-color-hover:              @color-primary-dark;
+@link-color-active:             mix(@link-color, @text-color, 25%);
+
+@button-background-hover:       darken(@color-selected, 5%);
+@button-background-selected:    @color-selected;
 @button-background-active:      mix(@button-background-selected, @button-background-hover);
-@input-background-hover:        darken(@color-dark, 5%);
-@input-background-selected:     @color-primary;
+@input-background-hover:        darken(@color-selected, 5%);
+@input-background-selected:     @color-selected;
 @input-background-active:       mix(@button-background-selected, @button-background-hover);
 
-@grid-tile-background-color:    @color-dark;
-@grid-tile-border-color:        darken(@color-dark, 3%);
+@grid-tile-background-color:          @color-light;
+@grid-tile-background-color-selected: @color-selected;
+@grid-tile-background-color-hover:    mix(@grid-tile-background-color, @grid-tile-background-color-selected);
+@grid-tile-border-color:              darken(@color-light, 4%);
 
 @note-text-color:               lighten(@color-primary, 50%);
 @note-text-color-active:        lighten(@color-primary, 65%);
@@ -66,6 +74,10 @@
   background-color: var(--color-primary, @color-primary);
 }
 
-@grid-spacing: 2em;
-@grid-tile-size: 14em;
-@grid-tile-size: 20vw;
+@grid-spacing:   1em;
+@grid-tile-size: 6em;
+
+
+:root {
+  --scale: 10;
+}

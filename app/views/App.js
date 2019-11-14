@@ -7,10 +7,11 @@ import { Emitter } from 'event-kit'
 
 import * as action from '../actions/items'
 import * as iconsetAction from '../actions/iconset'
+import * as workspaceAction from '../actions/workspace'
 import List from '../components/List'
 import Icon from '../models/Icon'
 import FileEntry from '../models/FileEntry'
-import exportWebfont from '../utils/export'
+import exportWebfont, { saveToLocalStorage, loadFromLocalStorage } from '../utils/export'
 
 const signal = Symbol('event-emitter')
 
@@ -56,16 +57,24 @@ function throttle (callback, timeout) {
   }
 }
 throttle = throttle.bind(throttle)
-class App extends Component {
 
-  props: {
-    size: number,
-    icons: Array<*>,
-    addIcon: Function,
-    addIcons: Function,
-    removeIcon: Function,
-    updateName: Function,
-  }
+
+type Properties = {
+  name: String,
+  size: number,
+  scale: Number,
+  icons: Array<*>,
+  addIcon: Function,
+  addIcons: Function,
+  removeIcon: Function,
+  updateName: Function,
+  zoomIn: Function,
+  zoomOut: Function,
+
+}
+
+
+class App extends Component<Properties> {
 
   constructor () {
     super (...arguments)
@@ -85,6 +94,13 @@ class App extends Component {
     document.removeEventListener('keydown', this.resolveKey)
   }
 
+  componentDidUpdate () {
+    this.styleEl.innerHTML = `:root {
+      --scale: ${ this.props.scale };
+    }`
+
+  }
+
   _resolveKey () {
   }
 
@@ -97,6 +113,19 @@ class App extends Component {
         this.props.addIcons(...icons)
     })
 
+  }
+
+  async save () {
+    const store = await this.props.serialize()
+    saveToLocalStorage('data', window._store)
+    console.warn("Saving data:", window._store)
+    console.warn("Saving data:", store)
+  }
+
+  async load () {
+    const store = await loadFromLocalStorage('data')
+    console.log(store)
+    this.props.loadData(store)
   }
 
   async export (format) {
@@ -136,9 +165,9 @@ class App extends Component {
       <header>
         <h2>
           <ThrottledInput
-            value='Icon set'
+            value={ this.props.name }
             onDidStopChanging={(state) => {
-              this.props.updateName({ name: state.value })
+              this.props.updateName(state.value)
             }}
           />
         </h2>
@@ -153,33 +182,57 @@ class App extends Component {
         <h3 className='label'>Export</h3>
         {/* TODO */}
         {/* <a className='btn' onClick={this.export.bind(this, 'svg')}>SVG</a> */}
+        <a className='btn' onClick={this.save.bind(this)}>Save</a>
+        <a className='btn' onClick={this.load.bind(this)}>Load</a>
         <a className='btn' onClick={this.export.bind(this, 'font')}>Webfont</a>
+
+        <aside className='toolbar-right'>
+          <a className='btn' onClick={ this.props.zoomIn }>+</a>
+          <a className='btn' onClick={ this.props.zoomOut }>-</a>
+        </aside>
+
       </footer>
+
+      <style ref={ ref => {
+        if (ref)
+          this.styleEl = ref
+      }} />
 
     </div>
   }
 }
 
 function mapState (state) {
-  let icons = state.items.map(item => new Icon(item))
-  let size  = state.items.length
-  return { icons, size }
+  let icons   = state.items.map(item => new Icon(item))
+  let size    = state.items.length
+  let scale   = state.workspace.scale
+  let name    = state.preferences.name
+  return { icons, size, scale, name }
 }
 
 function mapDispatch (dispatch) {
 
-  let addIcon = icon => dispatch(action.addIcon(icon))
-  let addIcons = (...icons) => dispatch(action.addIcons(...icons))
-  let removeIcon = icon => dispatch(action.removeIcon(icon))
-  let updateName = name => dispatch(iconsetAction.updateName(name))
+  const addIcon     = icon => dispatch(action.addIcon(icon))
+  const addIcons    = (...icons) => dispatch(action.addIcons(...icons))
+  const removeIcon  = icon => dispatch(action.removeIcon(icon))
+  const updateName  = name => dispatch(iconsetAction.updateName(name))
+
+  const zoomIn      = name => dispatch(workspaceAction.zoomIn(name))
+  const zoomOut     = name => dispatch(workspaceAction.zoomOut(name))
+  const serialize     = name => dispatch(workspaceAction.serializeData())
+  const loadData     = name => dispatch(workspaceAction.loadData())
 
   return {
     addIcon,
     addIcons,
     removeIcon,
     updateName,
+    zoomIn,
+    zoomOut,
+    serialize,
+    loadData,
   }
 }
 
 
-export default connect(mapState, mapDispatch)(App)
+export default connect(mapState, mapDispatch, )(App)

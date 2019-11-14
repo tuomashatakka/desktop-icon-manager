@@ -3,7 +3,7 @@ import { readFileSync } from 'fs'
 
 import views from '../views/views-registry'
 import IconView from '../components/Icon'
-import clean from '../utils/svg-cleanup'
+// import clean from '../utils/svg-cleanup'
 
 let source = Symbol('file-contents')
 
@@ -19,6 +19,10 @@ export default class Icon {
 
   constructor (properties) {
     this.properties = new Map(Object.entries(properties))
+  }
+
+  set name (value) {
+    this.properties.set('name', value)
   }
 
   get name () {
@@ -38,10 +42,11 @@ export default class Icon {
 
   get source () {
     if (!this[source]) {
-      let path = this.properties.get('path')
+      const path   = this.properties.get('path')
       this[source] = readFileSync(path, 'utf8')
     }
-    return clean(this[source])
+    return this[source]
+    // return clean(this[source])
   }
 
   getAbsolutePath () {
@@ -53,8 +58,8 @@ export default class Icon {
   }
 
   toJSON () {
-    let data = {}
-    for (let [attr, value] of this.properties.entries())
+    const data = {}
+    for (const [ attr, value ] of this.properties.entries())
       data[attr] = value
     return data
   }

@@ -20,9 +20,16 @@ export default function counter(state: Array<*> | void, action: Action) {
     case ADD_ICON:
       return [ ...state, parseIcon(action.icon) ]
 
-    case UPDATE_ICON:
-      // TODO
-      return [ ...state, parseIcon(action.icon) ]
+    case UPDATE_ICON: {
+      const icon  = parseIcon(action.icon)
+      const index = state.findIndex(item => item.code === icon.code)
+
+      if (index === -1)
+        return [ ...state, icon ]
+      state.slice(0, index)
+      state.splice(index, 1, icon)
+      return [ ...state ]
+    }
 
     case ADD_ICONS:
       return [ ...state, ...action.icons.map(parseIcon) ]

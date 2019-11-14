@@ -11,11 +11,13 @@ const ListItem = ({ item }) =>
     { views.get(item) }
   </li>
 
-const List = (props: Properties) =>
-  <ol className='list grid'>
-    {props.items.map((item, key) =>
-      <ListItem key={key} item={item} />
-    )}
-  </ol>
-
-export default List
+export default class List extends React.Component<Properties> {
+  render () {
+    console.log("Rendering list", this.props)
+    return <ol className='list grid'>
+      {this.props.items.map((item, key) =>
+        <ListItem key={key} item={item} />
+        )}
+    </ol>
+  }
+}

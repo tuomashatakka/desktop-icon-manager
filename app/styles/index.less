@@ -9,10 +9,11 @@ body {
   color: @text-color;
   height: 100vh;
   background-color: @base-background;
-  font-family: Sofia Pro, Omnes, Montserrat, Questrial, Gotham, Arial, Helvetica, Helvetica Neue, serif;
+  font-family: Helvetica Neue, Omnes, Montserrat, Questrial, Gotham, Arial, Helvetica, Helvetica Neue, serif;
+  font-weight: 400;
   overflow-y: hidden;
   user-select: none;
-  line-height: 1.8em;
+  line-height: 1.35em;
   cursor: default;
 }
 
@@ -23,6 +24,8 @@ body {
 .root {
   height: 100%;
   width: 100%;
+  padding: 0 0 10em;
+  box-sizing: border-box;
   overflow-y: auto;
 
   > header {
@@ -56,10 +59,14 @@ body {
 
 
 .tile {
+  background-color: @grid-tile-background-color;
+  transition:       150ms all;
+  padding:          @grid-spacing / 2 @grid-spacing;
+  width:            @grid-tile-size;
+  box-sizing:       border-box;
 
   h3 {
     display: block;
-    font-weight: 100;
     white-space: nowrap;
     overflow: hidden;
   }
@@ -73,6 +80,38 @@ body {
     height:     auto;
     width:      100%;
     max-width:  100%;
+  }
+
+  aside.properties {
+    display: none;
+  }
+
+  &:hover {
+    background-color: @grid-tile-background-color-hover;
+  }
+  &.selected {
+    background-color: @grid-tile-background-color-selected;
+    position: relative;
+
+    aside.properties {
+      display: block;
+      position: absolute;
+      z-index: 100;
+      background: @grid-tile-background-color-selected;
+      left: 100%;
+      top: 0;
+      height: auto;
+      min-height: 100%;
+      line-height: 1.2em;
+      font-size: 0.82em;
+
+      input {
+        padding: 0;
+        border-bottom: 1px solid;
+        font-size: 1em;
+        line-height: inherit;
+      }
+    }
   }
 }
 
@@ -98,12 +137,13 @@ ol, ul, li {
 }
 
 a {
-  color: white;
+  color: @link-color;
   opacity: 0.75;
   text-decoration: none;
 
   &:hover {
     opacity: 1;
+    color: @link-color-hover;
     cursor: pointer }}
 
 .btn {
@@ -152,20 +192,36 @@ a {
 }
 
 .grid {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: stretch;
-  justify-content: center;
+  display:            flex;
+  flex-flow:          row wrap;
+  align-items:        stretch;
+  justify-content:    flex-start;
 
   .list-item {
+    flex:             0 0 auto;
+    box-sizing:       border-box;
+    border-style:     solid;
+    border-width:     0 1px 1px 0;
     background-color: @grid-tile-background-color;
     border-color:     @grid-tile-border-color;
-    flex:             0 0 auto;
-    width:            @grid-tile-size;
-    box-sizing:       border-box;
-    border-width:     0 1px 1px 0;
-    border-style:     solid;
-    padding:          @grid-spacing / 2;
-    margin:           @grid-spacing / 2;
+    font-size:        ~"calc(var(--scale) * 0.15em)";
+  }
+
+  .source {
+    padding-bottom: 100%;
+    position:       relative;
+    height:         0;
+
+    svg {
+      top:        50%;
+      left:       50%;
+      width:      100%;
+      height:     auto;
+      position:   absolute;
+      transform:  translate(-50%, -50%);
+      max-height: 100%;
+    }
   }
 }
+
+

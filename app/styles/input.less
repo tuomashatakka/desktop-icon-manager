@@ -13,21 +13,21 @@
 input,
 .field {
   -webkit-appearance: none;
-  align-items:  center;
-  display:      flex;
-  height:       1.6em;
-  width:        auto;
-  border:       none;
-  background:   transparent;
-  font-family:  inherit;
-  font-weight:  inherit;
-  color:        inherit;
-  max-width:    100%;
-  padding:      @padding-regular / 2;
-  transition:   @transition-colors;
-  border-radius: 5px;
-  cursor:       pointer;
-  transition:   @transition-colors;
+  align-items:        center;
+  background:         transparent;
+  font-family:        inherit;
+  font-weight:        inherit;
+  color:              inherit;
+  border:             none;
+  display:            flex;
+  height:             1.6em;
+  width:              auto;
+  max-width:          100%;
+  cursor:             pointer;
+  padding:            @padding-regular / 2;
+  font-size:          1em;
+  border-radius:      2px;
+  transition:         @transition-colors;
   //
   // h4 {
   //   .text(label);
@@ -44,10 +44,11 @@ input,
     transition-duration: @transition-duration / 4;
     background-color:    @input-background-hover;
     border-color:        darken(@input-background-hover, 8%);
-    color:               white;
+    color:               @text-color;
   }
   &:focus:hover {
     background-color: @input-background-active;
     border-color:     darken(@input-background-active, 8%);
+    color:               @text-color;
   }
 }

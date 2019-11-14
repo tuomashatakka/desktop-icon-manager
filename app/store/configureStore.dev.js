@@ -32,7 +32,6 @@ const configureStore = (initialState: {}) => {
   enhancers.push(applyMiddleware(...middleware))
 
   const enhancer = composeEnhancers(...enhancers)
-  console.log(initialState, enhancer)
   const store = createStore(rootReducer, initialState, enhancer)
 
   if (module.hot)

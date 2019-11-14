@@ -1,5 +1,9 @@
 // @flow
-import React from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
+import * as action from '../actions/items'
+import * as workspaceAction from '../actions/workspace'
 
 const kb = val => {
   let fixed = (val / 1024).toFixed(0)
@@ -17,7 +21,11 @@ export type Properties = {
   item: {
     properties: Map<string, *>,
     source: string,
-  }
+  },
+  selected: Boolean,
+  updateName: string => void,
+  selectItem: ({ code: number }) => void,
+  deselectItem: () => void,
   // {
   //   path: string,
   //   name: string,
@@ -27,28 +35,78 @@ export type Properties = {
   // }
 }
 
-const Icon = ({ item }: Properties) => {
 
-  const applyContent = element => {
-    element.innerHTML = item.source
+class Icon extends Component<Properties> {
+
+  applyContent (element) {
+    element.innerHTML = this.props.item.source
   }
 
-  console.log(item)
+  render () {
+    const { item, selected } = this.props
 
-  return <article className='tile'>
-    <h3 className='meta name'>
-      {trim(item.properties.get('name'))}
-    </h3>
+    let className = 'tile'
 
-    {/* <input className='field' defaultValue={item.properties.get('name')} /> */}
-    <span className='meta size'>{kb(item.properties.get('size'))}</span>
-    <span className='meta code'>{codept(item.code)}</span>
+    if (selected)
+      className += ' selected'
 
-    <div className='source' ref={ref => ref && applyContent(ref)} />
+    const toggleItem = (e) => {
+      if (e.isDefaultPrevented())
+        return
+      if (selected)
+        this.props.deselectItem()
+      else
+        this.props.selectItem(this.props.item)
+    }
 
-    {/* <img src={item.properties.get('path')} /> */}
-    <input />
-  </article>
+    return <article className={ className } onClick={ toggleItem }>
+
+      <aside className='properties' onClick={ e => {
+        e.persist()
+        console.log(e)
+        e.preventDefault()
+        return false
+      }}>
+        <h3 className='meta name'>
+          <input
+            value={ item.properties.get('name') }
+            onChange={ e => {
+              item.name = e.target.value
+              this.props.updateName(item)
+            }}
+          />
+        </h3>
+
+        {/* <input className='field' defaultValue={item.properties.get('name')} /> */}
+        <span className='meta size'>{kb(item.properties.get('size'))}</span>
+        <span className='meta code'>{codept(item.code)}</span>
+      </aside>
+
+      <div className='source' ref={ref => ref && this.applyContent(ref)} />
+
+    </article>
+  }
 }
 
-export default Icon
+function mapProps (state, props) {
+  return {
+    selected: state.workspace.selectedItem === props.item.code
+  }
+}
+
+function mapDispatch (dispatch) {
+  const updateName = (icon) =>
+    dispatch(action.updateIcon(icon))
+  const selectItem = (icon) =>
+    dispatch(workspaceAction.selectItem(icon.code))
+  const deselectItem = () =>
+    dispatch(workspaceAction.deselectItem())
+  return {
+    updateName,
+    selectItem,
+    deselectItem,
+  }
+}
+
+
+export default connect(mapProps, mapDispatch)(Icon)
