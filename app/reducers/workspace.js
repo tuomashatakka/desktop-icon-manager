@@ -1,5 +1,6 @@
 // @flow
 import { ZOOM_IN, ZOOM_OUT, SELECT_ITEM, DESELECT_ITEM, LOAD_DATA } from '../actions/workspace'
+import { REMOVE_ICON } from '../actions/items'
 import type { Action } from '.'
 // import type { Icon } from '../models/Icon'
 
@@ -16,6 +17,9 @@ export default function workspaceReducer (state: {} | void, action: Action) {
       return { ...state, selectedItem: action.id }
 
     case DESELECT_ITEM:
+      return { ...state, selectedItem: null }
+
+    case REMOVE_ICON:
       return { ...state, selectedItem: null }
 
     case LOAD_DATA:

@@ -4,6 +4,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Emitter } from 'event-kit'
+import { Collection, Event } from 'disposable-events'
 
 import * as action from '../actions/items'
 import * as iconsetAction from '../actions/iconset'
@@ -13,9 +14,12 @@ import Icon from '../models/Icon'
 import FileEntry from '../models/FileEntry'
 import exportWebfont, { saveToLocalStorage, loadFromLocalStorage } from '../utils/export'
 
+import SelectedIconDetails from "./SelectedIconDetailsView"
+
 const signal = Symbol('event-emitter')
 
-class ThrottledInput extends Component {
+
+class ThrottledInput extends Component<*> {
 
   constructor (props) {
     super(props)
@@ -70,38 +74,55 @@ type Properties = {
   updateName: Function,
   zoomIn: Function,
   zoomOut: Function,
-
 }
 
 
 class App extends Component<Properties> {
 
-  constructor () {
-    super (...arguments)
-    this.state = {
-      path: '/Users/tuomas/Projects/Modules/trinity-icons'
-    }
-
-    this.onDrop = this.onDrop.bind(this)
+  constructor (props) {
+    super(props)
+    this.resolveKey   = this.resolveKey.bind(this)
+    this.onDrop       = this.onDrop.bind(this)
+    this.handlePinch  = this.handlePinch.bind(this)
+    this.handleScroll = this.handleScroll.bind(this)
   }
 
-  componentWillMount () {
-    this.resolveKey = this._resolveKey.bind(this)
-    document.addEventListener('keydown', this.resolveKey)
+  componentDidMount () {
+
+    const keydownDisposable = new Event({
+      type: 'keydown',
+      handler: this.resolveKey,
+    })
+
+    this.disposables = new Collection(keydownDisposable)
+
+    this.styleEl.innerHTML = `:root {
+      --scale: ${ this.props.scale };
+    }`
   }
 
   componentWillUnmount () {
-    document.removeEventListener('keydown', this.resolveKey)
+    this.disposables.dispose()
   }
 
   componentDidUpdate () {
     this.styleEl.innerHTML = `:root {
       --scale: ${ this.props.scale };
     }`
-
   }
 
-  _resolveKey () {
+  resolveKey (event) {
+    console.log("Keydown event", event)
+  }
+
+  handleScroll (event) {
+    console.log("Scroll event", event)
+  }
+
+  handlePinch (event) {
+
+    event.persist()
+    console.log("Pinch event", event)
   }
 
   async onDrop (event) {
@@ -148,19 +169,13 @@ class App extends Component<Properties> {
       return false
     }
 
-    console.log(this.props.icons)
-
     return <div
       className='root'
+      onScroll={ this.handleScroll }
+      onPointerMove={ this.handlePinch }
       onDrop={prevent(this.onDrop)}
       onDragEnd={logge('end')}
       onDragOver={logge('over')}>
-
-      <input
-        type='text'
-        value={this.state.path}
-        onChange={(event) => this.setState({ path: event.target.value })}
-      />
 
       <header>
         <h2>
@@ -176,6 +191,7 @@ class App extends Component<Properties> {
 
       <main className='browse'>
         <List items={this.props.icons} />
+        <SelectedIconDetails />
       </main>
 
       <footer className='toolbar'>

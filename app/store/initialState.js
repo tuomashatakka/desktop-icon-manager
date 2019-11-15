@@ -13,6 +13,6 @@ const store = {
   },
 }
 
-const loadedStore = loadFromLocalStorage('data')
+const loadedStore = null // loadFromLocalStorage('data')
 
 export default loadedStore || store
