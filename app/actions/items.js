@@ -12,16 +12,16 @@ export function addIcon (icon) {
 }
 
 export function addIcons (...icons) {
-  return {
-    type: ADD_ICONS,
-    icons,
+  return async function (dispatch, getState) {
+    for (const icon of icons)
+      await dispatch(addIcon(icon))
   }
 }
 
-export function removeIcon (icon) {
+export function removeIcon (id) {
   return {
     type: REMOVE_ICON,
-    icon,
+    id,
   }
 }
 

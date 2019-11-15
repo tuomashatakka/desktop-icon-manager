@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import React, { Component } from 'react'
 import views from '../views/views-registry'
 
 export type Properties = {
@@ -11,9 +11,8 @@ const ListItem = ({ item }) =>
     { views.get(item) }
   </li>
 
-export default class List extends React.Component<Properties> {
+export default class List extends Component<Properties> {
   render () {
-    console.log("Rendering list", this.props)
     return <ol className='list grid'>
       {this.props.items.map((item, key) =>
         <ListItem key={key} item={item} />

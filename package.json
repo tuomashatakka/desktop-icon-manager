@@ -108,6 +108,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.7.0",
     "@tuomashatakka/eslint-config": "^0.1.7",
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
@@ -118,6 +119,8 @@
     "babel-plugin-dynamic-import-webpack": "^1.0.1",
     "babel-plugin-flow-runtime": "^0.11.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-decorators": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5",
     "babel-plugin-transform-es2015-classes": "^6.24.1",
     "babel-preset-env": "^1.5.1",
     "babel-preset-react": "^6.24.1",
@@ -152,9 +155,9 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "fbjs-scripts": "^0.8.0",
     "file-loader": "^0.11.1",
-    "flow-bin": "^0.48.0",
+    "flow-bin": "^0.112.0",
     "flow-runtime": "^0.13.0",
-    "flow-typed": "^2.1.2",
+    "flow-typed": "^2.6.2",
     "html-webpack-plugin": "^2.29.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^20.0.4",
@@ -181,11 +184,13 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
+    "autobind-decorator": "^2.4.0",
     "devtron": "^1.4.0",
+    "disposable-events": "git+https://gitlab.com/tuomashatakka/disposable-events.git",
     "electron-debug": "^1.2.0",
     "event-kit": "^2.4.0",
     "font-awesome": "^4.7.0",
-    "history": "^4.6.3",
+    "history": "^4.10.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-hot-loader": "3.0.0-beta.6",
